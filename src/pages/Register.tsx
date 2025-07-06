@@ -5,6 +5,10 @@ import schema from "../utils/schema"
 import { yupResolver } from "@hookform/resolvers/yup";
 import ErrorMsg from "../components/ui/ErrorMsg";
 import api from "../config/axios.config";
+import toast from "react-hot-toast";
+import type { AxiosError } from "axios";
+import type { IAxiosError } from "../interface/IAxiosError";
+import { useState } from "react";
 
 interface IFormInput {
   username: string
@@ -12,14 +16,40 @@ interface IFormInput {
   password: string
 }
 const Register = () => {
+  //* 
+  const [isLoading,setIsLoading] = useState(false)
+  //* react react hook form and yup resolver for validation
     const { register, handleSubmit ,formState: { errors }} = useForm<IFormInput>({resolver: yupResolver(schema)})
+  //* handle submit   
     const onSubmit: SubmitHandler<IFormInput> = async(data) => {
+      setIsLoading(true)
       try{
+        //* connect to api 
         console.log(data)
         const response = await api.post("/auth/local/register",data)
         console.log(response)
+        if(response.status === 200){
+    
+        toast.success('Successfully joined!',
+          {
+            duration: 4000,
+            position: 'top-center',
+          })
+      }
       }catch(errors){
+        //* manage error msg
         console.log(errors)
+        const AxiosError = errors  as AxiosError<IAxiosError>
+
+        const ErrMsg = AxiosError?.response?.data?.error?.message || "Unexpected error accer"
+
+         toast.error(ErrMsg,
+          {
+            duration: 4000,
+            position: 'top-center',
+          })
+      }finally{
+        setIsLoading(false)
       }
     }
   return (
@@ -39,7 +69,7 @@ const Register = () => {
                 <Input placeholder="Password..." type="password" {...register("password")} />
                 <ErrorMsg msg={errors?.password?.message} display={true}/>
                 </div>
-                <Button type="submit">submit</Button>
+                <Button isLoading={isLoading} type="submit">submit</Button>
             </form>
       </section>
     </>
