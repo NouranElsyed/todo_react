@@ -5,9 +5,12 @@ import Register from '../pages/Register'
 import ProtectedRoute from './ProtectedRoute'
 import Home from '../pages/Home'
 
-const token = localStorage.getItem('token')
-const parsedToken =token? JSON.parse(token):null
-const logined : boolean = parsedToken?  true : false
+const user = localStorage.getItem('User')
+const parsedUser = user? JSON.parse(user):null
+const token = parsedUser?.jwt
+const logined : boolean = token? true : false
+console.log(logined)
+console.log(parsedUser)
 const router = createBrowserRouter(
     createRoutesFromElements(
         <>
@@ -15,7 +18,7 @@ const router = createBrowserRouter(
             <Route path="/login" element={<Login/>} />
             <Route path="/register" element={<Register />} />
             <Route path="/home" element={
-                <ProtectedRoute isAllowed={logined} redirectPath='/login'>
+                <ProtectedRoute  isAllowed={logined} redirectPath='/login'>
                     <Home/>
                 </ProtectedRoute>
             }/>

@@ -25,8 +25,8 @@ const Login = () => {
         //* connect to api 
         console.log(data)
         const response = await api.post("/auth/local",data)
-        console.log(response)
-        localStorage.setItem("token" , JSON.stringify(response.data.jwt))
+        console.log(response.data)
+        localStorage.setItem("User" , JSON.stringify(response.data))
         if(response.status === 200){
     
         toast.success('Welcome Back!',

@@ -30,7 +30,7 @@ const Register = () => {
         console.log(data)
         const response = await api.post("/auth/local/register",data)
         console.log(response)
-        localStorage.setItem("token" , JSON.stringify(response.data.jwt))
+        localStorage.setItem("User" , JSON.stringify(response.data))
         if(response.status === 200){
     
         toast.success('Successfully joined!',

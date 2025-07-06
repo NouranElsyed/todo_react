@@ -1,14 +1,15 @@
 import type { ReactNode } from "react"
 
-interface IProps {  
+interface IProps extends  React.ButtonHTMLAttributes<HTMLButtonElement>{  
     children: ReactNode,
+    className?: string
     type?: "submit" | "reset" | "button"
     isLoading?: boolean
 }
-const Button = ({children,type,isLoading}:IProps) => {
-  const classes = `${isLoading? "cursor-not-allowed bg-indigo-400" : "cursor-pointer bg-indigo-600 hover:bg-indigo-500"} flex items-center rounded-lg text-sm leading-6 font-semibold text-white transition duration-150 ease-in-out  px-4 py-2`
+const Button = ({children,type,isLoading,className,...props}:IProps) => {
+  const classes = `${className} ${isLoading? " cursor-not-allowed bg-indigo-400" : "cursor-pointer bg-indigo-600 hover:bg-indigo-500"} flex items-center rounded-lg text-sm leading-6 font-semibold text-white transition duration-150 ease-in-out  px-4 py-2`
   return (
-    <button disabled={isLoading} type={type} className={classes}>
+    <button disabled={isLoading} type={type} className={classes} {...props} >
       {isLoading && 
       <svg className="mr-3 -ml-1 size-5 animate-spin text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
