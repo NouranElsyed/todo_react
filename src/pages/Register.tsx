@@ -1,7 +1,6 @@
 import { useForm, type SubmitHandler } from "react-hook-form"
 import Button from "../components/ui/Button"
 import Input from "../components/ui/Input"
-import schema from "../utils/schema"
 import { yupResolver } from "@hookform/resolvers/yup";
 import ErrorMsg from "../components/ui/ErrorMsg";
 import api from "../config/axios.config";
@@ -9,6 +8,7 @@ import toast from "react-hot-toast";
 import type { AxiosError } from "axios";
 import type { IAxiosError } from "../interface/IAxiosError";
 import { useState } from "react";
+import {registerSchema} from "../utils/schema";
 
 interface IFormInput {
   username: string
@@ -16,10 +16,12 @@ interface IFormInput {
   password: string
 }
 const Register = () => {
-  //* 
+
+  
   const [isLoading,setIsLoading] = useState(false)
+  
   //* react react hook form and yup resolver for validation
-    const { register, handleSubmit ,formState: { errors }} = useForm<IFormInput>({resolver: yupResolver(schema)})
+    const { register, handleSubmit ,formState: { errors }} = useForm<IFormInput>({resolver: yupResolver(registerSchema)})
   //* handle submit   
     const onSubmit: SubmitHandler<IFormInput> = async(data) => {
       setIsLoading(true)
@@ -28,6 +30,7 @@ const Register = () => {
         console.log(data)
         const response = await api.post("/auth/local/register",data)
         console.log(response)
+        localStorage.setItem("token" , JSON.stringify(response.data.jwt))
         if(response.status === 200){
     
         toast.success('Successfully joined!',
@@ -35,6 +38,9 @@ const Register = () => {
             duration: 4000,
             position: 'top-center',
           })
+        setTimeout(()=>{
+          location.replace('/home')
+        },2000)
       }
       }catch(errors){
         //* manage error msg
