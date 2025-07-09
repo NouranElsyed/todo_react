@@ -9,6 +9,7 @@ import type { AxiosError } from "axios";
 import type { IAxiosError } from "../interface/IAxiosError";
 import { useState } from "react";
 import {registerSchema} from "../utils/schema";
+import { useNavigate } from "react-router-dom";
 
 interface IFormInput {
   username: string
@@ -17,7 +18,7 @@ interface IFormInput {
 }
 const Register = () => {
 
-  
+    const navigate= useNavigate()
   const [isLoading,setIsLoading] = useState(false)
   
   //* react react hook form and yup resolver for validation
@@ -57,7 +58,11 @@ const Register = () => {
       }finally{
         setIsLoading(false)
       }
+    }    //* nvigate to login
+    const  navigateToLogin =()=>{
+      navigate('/login')
     }
+
   return (
     <>
       <section className="w-full h-screen flex flex-col justify-center items-center ">
@@ -76,6 +81,7 @@ const Register = () => {
                 <ErrorMsg msg={errors?.password?.message} display={true}/>
                 </div>
                 <Button isLoading={isLoading} type="submit">submit</Button>
+                <p>have an account <span className="text-blue-700 underline cursor-pointer" onClick={navigateToLogin}>login</span></p>
             </form>
       </section>
     </>

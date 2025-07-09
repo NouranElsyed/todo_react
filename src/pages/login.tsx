@@ -9,12 +9,14 @@ import Input from "../components/ui/Input"
 import ErrorMsg from "../components/ui/ErrorMsg"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { loginSchema } from "../utils/schema";
+import { useNavigate } from "react-router-dom";
 
 interface IFormInput {
    identifier: string
   password: string
 }
 const Login = () => {
+  const navigate= useNavigate()
   const [isLoading,setIsLoading] = useState(false)
     //* react react hook form and yup resolver for validation
     const { register, handleSubmit ,formState: { errors }} = useForm<IFormInput>({resolver: yupResolver(loginSchema)})
@@ -54,11 +56,16 @@ const Login = () => {
         setIsLoading(false)
       }
     }
+    //* nvigate to register
+    const  navigateToRegister =()=>{
+      navigate('/register')
+    }
+
   return (
     <>
       <section className="w-full h-screen flex flex-col justify-center items-center ">
             <h3 className="text-2xl">Login to manage your todo 🤍</h3>
-            <form onSubmit={handleSubmit(onSubmit)} className="w-1/4 flex flex-col justify-center items-center mt-10 space-y-5">
+            <form onSubmit={handleSubmit(onSubmit)} className="w-3/4 md:w-1/2 lg:w-1/4 flex flex-col justify-center items-center mt-10 space-y-5">
                 <div className="w-full flex flex-col ">
                 <Input placeholder="Email..." type="email" {...register("identifier")} />
                 <ErrorMsg msg={errors?.identifier?.message} display={true}/>
@@ -68,6 +75,7 @@ const Login = () => {
                 <ErrorMsg msg={errors?.password?.message} display={true}/>
                 </div>
                 <Button isLoading={isLoading} type="submit">submit</Button>
+                <p>Don't have account <span className="text-blue-700 underline cursor-pointer" onClick={navigateToRegister}>register</span></p>
             </form>
       </section>
     </>

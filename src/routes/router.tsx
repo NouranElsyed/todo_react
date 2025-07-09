@@ -9,14 +9,19 @@ const user = localStorage.getItem('User')
 const parsedUser = user? JSON.parse(user):null
 const token = parsedUser?.jwt
 const logined : boolean = token? true : false
-console.log(logined)
-console.log(parsedUser)
+
 const router = createBrowserRouter(
     createRoutesFromElements(
         <>
             <Route path="/" element={<Welcome />} />
-            <Route path="/login" element={<Login/>} />
-            <Route path="/register" element={<Register />} />
+             <Route path="/login" element={
+                <ProtectedRoute  isAllowed={!logined} redirectPath='/home'>
+                        <Login/>
+                </ProtectedRoute>}/>
+             <Route path="/register" element={
+                <ProtectedRoute  isAllowed={!logined} redirectPath='/home'>
+                        <Register />
+                </ProtectedRoute>}/>
             <Route path="/home" element={
                 <ProtectedRoute  isAllowed={logined} redirectPath='/login'>
                     <Home/>
