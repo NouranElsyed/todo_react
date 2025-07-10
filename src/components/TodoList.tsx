@@ -1,8 +1,7 @@
-
-import api from "../config/axios.config";
+import useApiGetQuery from "../Hooks/useApiGetQuery";
 import type { ITodo } from "../interface/ITodo";
 import Todo from "./Todo";
-import { useQuery } from "@tanstack/react-query";
+
 
 //* get data from localstorage 
 
@@ -13,16 +12,10 @@ const token = parsedUser?.jwt;
 
 const TodoList = () => {
   
-  const { isLoading, error, data } = useQuery({
-    queryKey: ['todos'],
-    queryFn: async() =>{
-    const {data}= await api.get('/users/me?populate[todos][filters][publishedAt][$notNull]=true"',{
-      headers:{
-        Authorization: `Bearer ${token}`,
-      }
-     })
-        return data.todos
-        
+  const { isLoading, error, data } = useApiGetQuery({queryKey:['todos'],url:'/users/me?populate[todos][filters][publishedAt][$notNull]=true"',config:{
+    headers:{
+      Authorization:`Bearer ${token}`
+    }
   }})
   console.log({isLoading, error, data})
   
