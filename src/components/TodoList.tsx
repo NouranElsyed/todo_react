@@ -1,57 +1,47 @@
-import { useEffect, useState } from "react"
-import api from "../config/axios.config"
-import Button from "./ui/Button"
 
-interface IuserDetails{
-documentId?:string
-email?:string
-id?: number
-todos?:{
-IsDone?:boolean
-description?: string
-documentId?: string
-id?: number
-title?: string
-}[]
-username?: string
-}
+import api from "../config/axios.config";
+import type { ITodo } from "../interface/ITodo";
+import Todo from "./Todo";
+import { useQuery } from "@tanstack/react-query";
 
-const user = localStorage.getItem('User')
-const parsedUser = user? JSON.parse(user):null
-const token = parsedUser?.jwt
+//* get data from localstorage 
+
+const user = localStorage.getItem("User");
+const parsedUser = user ? JSON.parse(user) : null;
+const token = parsedUser?.jwt;
+
+
 const TodoList = () => {
-    const [user,setUser] = useState<IuserDetails|null>(null)
-
-    useEffect(()=>{
-        try{
-            api.get('/users/me?populate[todos][filters][publishedAt][$notNull]=true',{
-                headers:{
-                    Authorization: `Bearer ${token}`
-                }
-            }).then(res=>{
-                setUser(res.data)}).catch(err=>console.log(err))
-        }catch(err){
-            console.log(err)
-        }
-    },[])
-    
+  
+  const { isLoading, error, data } = useQuery({
+    queryKey: ['todos'],
+    queryFn: async() =>{
+    const {data}= await api.get('/users/me?populate[todos][filters][publishedAt][$notNull]=true"',{
+      headers:{
+        Authorization: `Bearer ${token}`,
+      }
+     })
+        return data.todos
+        
+  }})
+  console.log({isLoading, error, data})
+  
+  if(isLoading) return <p>Loading...</p>
   return (
     <>
     {
-       user?.todos?.map((todo)=>{
-        return(
-           <div key={todo.id} className="flex items-center justify-between space-x-30 bg-[rgba(71,71,105,0.28)] px-5 py-2 rounded-lg mb-3">
-               <p>{todo.title}</p>
-               <div className="flex space-x-2">     
-                 <Button className="">update</Button>
-                 <Button className="bg-red-700">delete</Button>
-               </div>
-             </div>
-        )
-       })
+    !data.length 
+    ? 
+    <p className=" font-semibold text-2xl">There is no todos <span className="text-red-600 font-bold text-3xl">!</span></p>
+    :
+    data?.map((todo:ITodo) => {
+        return (
+          <Todo todo={todo}/>
+        );
+      })
     }
     </>
-  )
-}
+  );
+};
 
-export default TodoList
+export default TodoList;
