@@ -15,7 +15,7 @@ const Home = () => {
   return (
     <>
     <header>
-      <h3 className="fixed top-5 left-5">{parsedUser.user.username}'s Todo</h3>
+      <h3 className="fixed top-5 left-5 text-indigo-700 text-lg font-semibold">{parsedUser.user.username}'s Todo</h3>
       <Button  className="fixed top-5 right-5" onClick={handleLogout}>logout</Button>
     </header>
     <div><TodoList/></div>
