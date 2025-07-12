@@ -4,6 +4,7 @@ export interface ITodo {
   documentId?: string;
   id?: number;
   title?: string;
+  user?: number[]
 }
 
 // interface IuserDetails {

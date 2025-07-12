@@ -17,7 +17,7 @@ const TodoList = () => {
   //* manage modal state
   const [modalType, setModalType] = useState<ModalType>(null);
   const [modalOpen, setModalOpen] = useState(false);
-
+//* handle open and close modal
   const onCloseModal = () => setModalOpen(false);
   const onOpenAddModal = () => {
     setModalType("add");
@@ -33,8 +33,7 @@ const TodoList = () => {
       },
     },
   });
-  console.log({ isLoading, error, data });
-
+console.log(error)
   //* Loading
   if (isLoading) return <p>Loading...</p>;
 
@@ -47,7 +46,7 @@ const TodoList = () => {
         </Button>
         <Modal title="Add Task" isOpen={modalOpen} onclose={onCloseModal}>
           {modalType == "add" && (
-            <AddTaskForm onclose={onCloseModal}></AddTaskForm>
+            <AddTaskForm  onclose={onCloseModal}></AddTaskForm>
           )}
         </Modal>
       </div>
@@ -60,9 +59,9 @@ const TodoList = () => {
       ) : (
         data?.map((todo: ITodo) => {
           return (
-            <>
-              <Todo todo={todo} />
-            </>
+          
+              <Todo key={todo.id} todo={todo} token={token}/>
+            
           );
         })
       )}
